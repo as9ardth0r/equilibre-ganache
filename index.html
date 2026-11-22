@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Équilibre — atelier de formulation de ganaches</title>
+  <meta name="description" content="Calcule l'eau, les sucres, les matières grasses et les solides de ta ganache, et équilibre-la automatiquement.">
+  <meta property="og:title" content="Équilibre — atelier de formulation de ganaches">
+  <meta property="og:description" content="Un pâtissier devenu développeur : la science de la ganache, en temps réel.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%233b2216'/><path d='M6 18c4-4 8 4 10 0s6-4 10 0' stroke='%23e9c46a' stroke-width='2.5' fill='none'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap">
+      <p class="kicker">Atelier de formulation · Ganaches</p>
+      <h1>Équilibre<span class="dot">.</span></h1>
+      <p class="lede">Une ganache, c'est une émulsion : de l'eau, des sucres, du gras et des solides qui doivent tenir ensemble.
+        Compose ta recette, lis sa structure en direct, et laisse le solveur la rééquilibrer au gramme près.</p>
+    </div>
+    <svg class="drip" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 0H1440V53.5 L1440 53.5 L1420 47.2 L1400 40.3 L1380 37.6 L1360 40.3 L1340 44.9 L1320 46.6 L1300 42.0 L1280 32.3 L1260 22.5 L1240 17.9 L1220 20.7 L1200 28.2 L1180 35.3 L1160 37.6 L1140 34.7 L1120 30.6 L1100 30.0 L1080 35.8 L1060 45.9 L1040 55.0 L1020 58.2 L1000 54.1 L980 45.8 L960 38.7 L940 36.6 L920 39.1 L900 42.0 L880 40.4 L860 32.5 L840 20.9 L820 11.2 L800 7.8 L780 11.6 L760 18.9 L740 24.2 L720 24.4 L700 20.6 L680 17.4 L660 19.4 L640 27.8 L620 39.4 L600 48.5 L580 50.8 L560 46.5 L540 39.9 L520 36.0 L500 37.5 L480 42.5 L460 46.1 L440 44.0 L420 35.8 L400 25.3 L380 18.2 L360 18.1 L340 24.1 L320 31.7 L300 35.7 L280 34.3 L260 30.0 L240 27.9 L220 31.8 L200 41.3 L180 52.2 L160 58.8 L140 58.0 L120 51.5 L100 44.3 L80 41.0 L60 42.9 L40 46.7 L20 47.3 L0 41.6 Z"/>
+    </svg>
+  </header>
+
+  <main class="wrap grid">
+    <section class="panel recipe" aria-labelledby="recipe-title">
+      <div class="panel-head">
+        <h2 id="recipe-title">La recette</h2>
+        <label class="select">
+          <span>Type</span>
+          <select id="profile"></select>
+        </label>
+      </div>
+      <p class="profile-hint" id="profile-hint"></p>
+
+      <div class="presets" id="presets" role="group" aria-label="Recettes d'exemple"></div>
+
+      <ul class="ingredients" id="ingredients"></ul>
+
+      <div class="add-row">
+        <select id="add-select" aria-label="Ajouter un ingrédient"></select>
+        <button class="btn ghost" id="add-btn" type="button">+ Ajouter</button>
+      </div>
+
+      <div class="total-row">
+        <div>
+          <span class="label">Masse totale</span>
+          <strong id="total" class="mono">0 g</strong>
+        </div>
+        <label class="scale">
+          <span class="label">Ramener à</span>
+          <input id="scale-input" type="number" min="50" step="50" inputmode="numeric" placeholder="1000">
+          <span class="unit">g</span>
+          <button class="btn ghost small" id="scale-btn" type="button">OK</button>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="balance-btn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14M3 14l2-7 2 7a2 2 0 0 1-4 0zm14 0 2-7 2 7a2 2 0 0 1-4 0z"/></svg>
+          Équilibrer automatiquement
+        </button>
+        <button class="btn" id="share-btn" type="button">Copier le lien</button>
+        <button class="btn" id="print-btn" type="button">Fiche à imprimer</button>
+      </div>
+      <p class="fine">Verrouille 🔒 les ingrédients que tu ne veux pas toucher (ton chocolat de couverture, par exemple) : le solveur ne joue que sur les autres, à masse constante.</p>
+    </section>
+
+    <section class="panel analysis" aria-labelledby="analysis-title">
+      <div class="panel-head">
+        <h2 id="analysis-title">Structure</h2>
+      </div>
+
+      <div class="score-block">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="52" class="ring-bg"/>
+          <circle cx="60" cy="60" r="52" class="ring-fg" id="ring-fg"/>
+        </svg>
+        <div class="score-text">
+          <strong id="score" class="mono">—</strong>
+          <span>/ 100</span>
+        </div>
+        <div class="verdict">
+          <p class="verdict-title" id="verdict-title"></p>
+          <ul id="advice" class="advice"></ul>
+        </div>
+      </div>
+
+      <h3 class="sub">Composition</h3>
+      <div class="stack" id="stack" role="img" aria-label="Répartition de la composition"></div>
+      <ul class="legend" id="legend"></ul>
+
+      <h3 class="sub">Repères <small>zone de confort en couleur</small></h3>
+      <div class="gauges" id="gauges"></div>
+
+      <h3 class="sub">Indicateurs de chocolatier</h3>
+      <dl class="extras" id="extras"></dl>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p>Conçu par <a href="https://as9ardth0r.github.io/portfolio/">Joël Broutin</a>, pâtissier de formation devenu développeur web.
+      Valeurs de composition moyennes et repères indicatifs : ajuste-les à tes fiches techniques.</p>
+    <p><a href="https://github.com/as9ardth0r/equilibre-ganache">Code source</a> · JavaScript natif, zéro dépendance.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
